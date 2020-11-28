@@ -16,10 +16,10 @@ func checkFolder(dir string) bool {
 	return false
 }
 
-func (inbox *Inbox) Store() {
+func (list *TaskList) Store() {
 
 }
 
-func (inbox *Inbox) Load() {
+func (list *TaskList) Load() {
 
 }
