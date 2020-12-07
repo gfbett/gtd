@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 import "flag"
 
 var inbox = flag.String("i", "", "Adds a task in the inbox")
@@ -13,6 +16,10 @@ func main() {
 	if *inbox != "" {
 		fmt.Println("TaskList task", *inbox)
 	}
-	fmt.Println("GTD GO")
 
+	gtd := InitGTD()
+
+
+	home, _ := os.UserHomeDir()
+	gtd.Store(home)
 }

@@ -21,3 +21,15 @@ func InitTaskList() *TaskList {
 	inbox.Tasks = make([]*Task, 0, 10)
 	return inbox
 }
+
+func (list *TaskList) toStorableString() string {
+	return "{}"
+}
+
+func (list *TaskList) loadFromStorableString(data []byte) {
+
+}
+
+func (list *TaskList) fileName() string {
+	return "inbox.json"
+}

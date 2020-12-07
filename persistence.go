@@ -7,8 +7,8 @@ import (
 )
 
 type Writable interface {
-	toJson() string
-	loadFromJson(data []byte)
+	toStorableString() string
+	loadFromStorableString(data []byte)
 	fileName() string
 }
 
@@ -28,7 +28,7 @@ func CreateFolderIfNotExists(dir string) bool {
 func Store(writable Writable, path string) bool {
 
 	filename := writable.fileName()
-	data := writable.toJson()
+	data := writable.toStorableString()
 	file, err := os.Create(path + "/" + filename)
 	if err != nil {
 		return false
@@ -60,6 +60,6 @@ func Load(writable Writable, path string) bool {
 	if err != nil {
 		return false
 	}
-	writable.loadFromJson(all)
+	writable.loadFromStorableString(all)
 	return true
 }

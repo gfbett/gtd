@@ -42,11 +42,11 @@ type TestWritable struct {
 	Test bool
 }
 
-func (w *TestWritable) toJson() string {
+func (w *TestWritable) toStorableString() string {
 	return "{\"Test\":true}"
 }
 
-func (w *TestWritable) loadFromJson(data []byte) {
+func (w *TestWritable) loadFromStorableString(data []byte) {
 	var loaded TestWritable
 	err := json.Unmarshal(data, &loaded)
 	if err != nil {
