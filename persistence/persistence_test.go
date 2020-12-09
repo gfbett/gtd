@@ -1,4 +1,4 @@
-package main
+package persistence
 
 import (
 	"encoding/json"
@@ -42,19 +42,19 @@ type TestWritable struct {
 	Test bool
 }
 
-func (w *TestWritable) toStorableString() string {
+func (w *TestWritable) ToStorableString() string {
 	return "{\"Test\":true}"
 }
 
-func (w *TestWritable) loadFromStorableString(data []byte) {
+func (w *TestWritable) LoadFromStorableString(data string) {
 	var loaded TestWritable
-	err := json.Unmarshal(data, &loaded)
+	err := json.Unmarshal([]byte(data), &loaded)
 	if err != nil {
 		log.Fatal(err)
 	}
 	w.Test = loaded.Test
 }
 
-func (w *TestWritable) fileName() string {
+func (w *TestWritable) FileName() string {
 	return "test.json"
 }

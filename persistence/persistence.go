@@ -1,16 +1,10 @@
-package main
+package persistence
 
 import (
 	"io/ioutil"
 	"log"
 	"os"
 )
-
-type Writable interface {
-	toStorableString() string
-	loadFromStorableString(data []byte)
-	fileName() string
-}
 
 func CreateFolderIfNotExists(dir string) bool {
 	_, err := os.Stat(dir)
@@ -27,8 +21,8 @@ func CreateFolderIfNotExists(dir string) bool {
 
 func Store(writable Writable, path string) bool {
 
-	filename := writable.fileName()
-	data := writable.toStorableString()
+	filename := writable.FileName()
+	data := writable.ToStorableString()
 	file, err := os.Create(path + "/" + filename)
 	if err != nil {
 		return false
@@ -46,7 +40,7 @@ func Store(writable Writable, path string) bool {
 }
 
 func Load(writable Writable, path string) bool {
-	filename := writable.fileName()
+	filename := writable.FileName()
 	file, err := os.Open(path + "/" + filename)
 	if err != nil {
 		return false
@@ -60,6 +54,6 @@ func Load(writable Writable, path string) bool {
 	if err != nil {
 		return false
 	}
-	writable.loadFromStorableString(all)
+	writable.LoadFromStorableString(string(all))
 	return true
 }

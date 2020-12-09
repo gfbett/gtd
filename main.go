@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"github.com/gfbett/gtd/tasklist"
 )
 import "flag"
 
@@ -13,13 +13,12 @@ func main() {
 	// inputs parameters declaration
 	flag.Parse()
 
-	if *inbox != "" {
-		fmt.Println("TaskList task", *inbox)
-	}
-
 	gtd := InitGTD()
 
+	if *inbox != "" {
+		fmt.Println("Adding task", *inbox)
+		gtd.inbox.AddTask(tasklist.NewTask(*inbox))
+	}
 
-	home, _ := os.UserHomeDir()
-	gtd.Store(home)
+	gtd.Store()
 }

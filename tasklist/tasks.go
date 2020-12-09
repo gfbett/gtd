@@ -1,4 +1,4 @@
-package main
+package tasklist
 
 type Task struct {
 	name string

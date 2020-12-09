@@ -1,4 +1,4 @@
-package main
+package tasklist
 
 type TaskList struct {
 	Tasks []*Task
@@ -22,14 +22,14 @@ func InitTaskList() *TaskList {
 	return inbox
 }
 
-func (list *TaskList) toStorableString() string {
+func (list *TaskList) ToStorableString() string {
 	return "{}"
 }
 
-func (list *TaskList) loadFromStorableString(data []byte) {
+func (list *TaskList) LoadFromStorableString(data string) {
 
 }
 
-func (list *TaskList) fileName() string {
+func (list *TaskList) FileName() string {
 	return "inbox.json"
 }

@@ -1,4 +1,4 @@
 .idea
 gtd
-/testdata/test.json
+/persistence/testdata/test.json
 *.swp
