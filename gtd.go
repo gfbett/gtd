@@ -10,24 +10,26 @@ import (
 const storageSubfolder = "/.gtdgo"
 
 type GTD struct {
-	inbox *tasklist.TaskList
+	storageFolder string
+	inbox         *tasklist.TaskList
 }
 
-func InitGTD() *GTD {
+func LoadGTD() *GTD {
 	gtd := new(GTD)
+	home, _ := os.UserHomeDir()
+	gtd.storageFolder = home + storageSubfolder
 	gtd.inbox = tasklist.InitTaskList()
+	persistence.Load(gtd.inbox, gtd.storageFolder)
 	return gtd
 }
 
 func (gtd *GTD) Store() bool {
-	home, _ := os.UserHomeDir()
-	storageFolder := home + storageSubfolder
-	res := persistence.CreateFolderIfNotExists(storageFolder)
+	res := persistence.CreateFolderIfNotExists(gtd.storageFolder)
 	if res == false {
 		log.Fatal("error creating storage folder")
 		return false
 	}
-	res = persistence.Store(gtd.inbox, storageFolder)
+	res = persistence.Store(gtd.inbox, gtd.storageFolder)
 	if res == false {
 		log.Fatal("error storing inbox")
 		return false

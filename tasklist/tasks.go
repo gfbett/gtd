@@ -1,11 +1,15 @@
 package tasklist
 
 type Task struct {
-	name string
+	Name string
 }
 
 func NewTask(name string) *Task {
 	task := new(Task)
-	task.name = name
+	task.Name = name
 	return task
+}
+
+func (task *Task) ToStorableString() string {
+	return task.Name
 }
