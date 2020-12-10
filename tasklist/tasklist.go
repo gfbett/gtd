@@ -19,7 +19,18 @@ func (list *TaskList) AddTask(task *Task) {
 }
 
 func (list *TaskList) GetTask(i int) *Task {
+	if i < 0 || i >= list.Size() {
+		return nil
+	}
 	return list.tasks[i]
+}
+
+func (list *TaskList) RemoveTask(i int) bool {
+	if i < 0 || i >= list.Size() {
+		return false
+	}
+	list.tasks = append(list.tasks[:i], list.tasks[i+1:]...)
+	return true
 }
 
 func InitTaskList() *TaskList {
@@ -42,15 +53,9 @@ func (list *TaskList) ToStorableString() string {
 
 func (list *TaskList) LoadFromStorableString(data string) {
 	parts := strings.Split(data, "\n")
-	if len(parts) < 1 {
-		return
-	}
 	size, err := strconv.Atoi(parts[0])
 	if err != nil || len(parts) != size+1 {
 		return
-	}
-	if size < 0 {
-		size = 10
 	}
 	list.tasks = make([]*Task, 0, size)
 	for i := 0; i < size; i++ {
@@ -59,5 +64,5 @@ func (list *TaskList) LoadFromStorableString(data string) {
 }
 
 func (list *TaskList) FileName() string {
-	return "inbox.json"
+	return "inbox.gtd"
 }
