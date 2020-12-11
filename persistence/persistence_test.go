@@ -46,13 +46,15 @@ func (w *TestWritable) ToStorableString() string {
 	return "{\"Test\":true}"
 }
 
-func (w *TestWritable) LoadFromStorableString(data string) {
+func (w *TestWritable) LoadFromStorableString(data string) bool {
 	var loaded TestWritable
 	err := json.Unmarshal([]byte(data), &loaded)
 	if err != nil {
 		log.Fatal(err)
+		return false
 	}
 	w.Test = loaded.Test
+	return true
 }
 
 func (w *TestWritable) FileName() string {

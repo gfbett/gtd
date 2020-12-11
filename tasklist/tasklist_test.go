@@ -75,10 +75,13 @@ func TestToStorableString(t *testing.T) {
 	if storable != "0" {
 		t.Error("Unexpected storable string")
 	}
-	taskList.AddTask(NewTask("Test task"))
-	taskList.AddTask(NewTask("Another task"))
+	task1 := NewTask("Test task")
+	taskList.AddTask(task1)
+	task2 := NewTask("Another task")
+	taskList.AddTask(task2)
 	storable = taskList.ToStorableString()
-	if storable != "2\nTest task\nAnother task" {
+	expected := "2\n" + task1.ToStorableString() + "\n" + task2.ToStorableString()
+	if storable != expected {
 		t.Error("Unexpected storable string:" + storable)
 	}
 }
@@ -124,17 +127,21 @@ func TestLoadInvalidData(t *testing.T) {
 }
 
 func TestTaskListLoadFromStorableString(t *testing.T) {
-	storable := "3\nTask1\nTask2\nTask3"
+	storable := "4\nTask1|false\nTask2|true\nTask3|false\nTask4|true"
 	taskList := InitTaskList()
 	taskList.LoadFromStorableString(storable)
 	size := taskList.Size()
-	if size != 3 {
+	if size != 4 {
 		t.Error("Unexpected size: " + fmt.Sprint(size))
 	}
-	for i := 0; i < 3; i++ {
-		name := taskList.GetTask(i).Name()
-		if name != "Task"+fmt.Sprint(i+1) {
-			t.Error("Unexpected task name: " + name)
+	for i := 0; i < 4; i++ {
+		task := taskList.GetTask(i)
+		if task.Name() != "Task"+fmt.Sprint(i+1) {
+			t.Error("Unexpected task name: " + task.Name())
 		}
+		if task.Completed() != (i%2 != 0) {
+			t.Error("Completed is not the expected")
+		}
+
 	}
 }

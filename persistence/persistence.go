@@ -52,8 +52,8 @@ func Load(writable Writable, path string) bool {
 	}()
 	all, err := ioutil.ReadAll(file)
 	if err != nil {
+		log.Fatal("Unable to load file")
 		return false
 	}
-	writable.LoadFromStorableString(string(all))
-	return true
+	return writable.LoadFromStorableString(string(all))
 }

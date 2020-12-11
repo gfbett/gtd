@@ -2,6 +2,7 @@ package tasklist
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -48,19 +49,25 @@ func (list *TaskList) ToStorableString() string {
 		fmt.Fprint(&b, list.tasks[i].ToStorableString())
 	}
 	return b.String()
-
 }
 
-func (list *TaskList) LoadFromStorableString(data string) {
+func (list *TaskList) LoadFromStorableString(data string) bool {
 	parts := strings.Split(data, "\n")
 	size, err := strconv.Atoi(parts[0])
-	if err != nil || len(parts) != size+1 {
-		return
+	if err != nil || len(parts) < size+1 {
+		log.Print("Invalid task count")
+		return false
 	}
 	list.tasks = make([]*Task, 0, size)
 	for i := 0; i < size; i++ {
-		list.AddTask(NewTask(parts[i+1]))
+		task := LoadTask(parts[i+1])
+		if task == nil {
+			log.Print("Unable to load task from: " + parts[i+1])
+			return false
+		}
+		list.AddTask(task)
 	}
+	return true
 }
 
 func (list *TaskList) FileName() string {

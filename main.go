@@ -18,8 +18,11 @@ func main() {
 	flag.Parse()
 
 	gtd := LoadGTD()
+	if gtd == nil {
+		fmt.Println("Unable to read stored tasks")
+		os.Exit(1)
+	}
 	modified := false
-	reader := bufio.NewReader(os.Stdin)
 
 	if *inbox != "" {
 		fmt.Println("Adding task", *inbox)
@@ -27,29 +30,41 @@ func main() {
 		modified = true
 	} else if *removeTask != -1 {
 		taskIndex := *removeTask
-		task := gtd.inbox.GetTask(taskIndex)
-		if task != nil {
-			fmt.Println("Removing task:" + task.Name())
-			gtd.inbox.RemoveTask(taskIndex)
-			modified = true
-		}
+		modified = RemoveTask(gtd.inbox, taskIndex)
 	} else if *editTask != -1 {
 		taskIndex := *editTask
-		task := gtd.inbox.GetTask(taskIndex)
-		if task != nil {
-			fmt.Println("Current task description:", task.Name())
-			fmt.Println("Enter new description")
-			name, _ := reader.ReadString('\n')
-			fmt.Println("New description:", name)
-			task.SetName(name)
-			modified = true
-		}
+		modified = EditTask(gtd.inbox, taskIndex)
 	} else {
 		ListTasks(gtd.inbox)
 	}
 	if modified {
 		gtd.Store()
 	}
+
+}
+
+func RemoveTask(tasklist *tasklist.TaskList, index int) bool {
+	task := tasklist.GetTask(index)
+	if task != nil {
+		fmt.Println("Removing task:" + task.Name())
+		tasklist.RemoveTask(index)
+		return true
+	}
+	return false
+}
+
+func EditTask(tasklist *tasklist.TaskList, index int) bool {
+	reader := bufio.NewReader(os.Stdin)
+	task := tasklist.GetTask(index)
+	if task != nil {
+		fmt.Println("Current task description:", task.Name())
+		fmt.Println("Enter new description")
+		name, _ := reader.ReadString('\n')
+		fmt.Println("New description:", name)
+		task.SetName(name)
+		return true
+	}
+	return false
 }
 
 func ListTasks(list *tasklist.TaskList) {
