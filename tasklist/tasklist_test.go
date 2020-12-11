@@ -16,7 +16,7 @@ func TestAdd(t *testing.T) {
 	inbox := InitTaskList()
 	name := "test name"
 	inbox.AddTask(NewTask(name))
-	if inbox.GetTask(0).Name != name {
+	if inbox.GetTask(0).Name() != name {
 		t.Error("Unexpected task received")
 	}
 	if inbox.Size() != 1 {
@@ -38,7 +38,7 @@ func TestAddMultiple(t *testing.T) {
 
 	for i := 0; i < 12; i++ {
 		taskName := fmt.Sprintf(taskTemplate, i)
-		if inbox.GetTask(i).Name != taskName {
+		if inbox.GetTask(i).Name() != taskName {
 			t.Error("Unexpected task")
 		}
 	}
@@ -62,7 +62,7 @@ func TestRemove(t *testing.T) {
 	}
 	var expected = [...]string{"Task0", "Task1", "Task2", "Task3", "Task4", "Task6", "Task7", "Task8", "Task9"}
 	for i := 0; i < inbox.Size(); i++ {
-		taskName := inbox.GetTask(i).Name
+		taskName := inbox.GetTask(i).Name()
 		if taskName != expected[i] {
 			t.Error("Unexpected name, expected: " + expected[i] + "found: " + taskName)
 		}
@@ -132,7 +132,7 @@ func TestTaskListLoadFromStorableString(t *testing.T) {
 		t.Error("Unexpected size: " + fmt.Sprint(size))
 	}
 	for i := 0; i < 3; i++ {
-		name := taskList.GetTask(i).Name
+		name := taskList.GetTask(i).Name()
 		if name != "Task"+fmt.Sprint(i+1) {
 			t.Error("Unexpected task name: " + name)
 		}

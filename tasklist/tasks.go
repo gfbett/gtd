@@ -1,15 +1,27 @@
 package tasklist
 
+import (
+	"strings"
+)
+
 type Task struct {
-	Name string
+	name string
 }
 
 func NewTask(name string) *Task {
 	task := new(Task)
-	task.Name = name
+	task.name = strings.TrimSpace(name)
 	return task
 }
 
 func (task *Task) ToStorableString() string {
-	return task.Name
+	return task.name
+}
+
+func (task *Task) Name() string {
+	return task.name
+}
+
+func (task *Task) SetName(name string) {
+	task.name = strings.TrimSpace(name)
 }
