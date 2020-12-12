@@ -86,6 +86,24 @@ func TestToStorableString(t *testing.T) {
 	}
 }
 
+func TestToStorableStringOrdering(t *testing.T) {
+	taskList := InitTaskList()
+	storable := taskList.ToStorableString()
+	if storable != "0" {
+		t.Error("Unexpected storable string")
+	}
+	task1 := NewTask("Test task")
+	taskList.AddTask(task1)
+	task1.SetCompleted(true)
+	task2 := NewTask("Another task")
+	taskList.AddTask(task2)
+	storable = taskList.ToStorableString()
+	expected := "2\n" + task2.ToStorableString() + "\n" + task1.ToStorableString()
+	if storable != expected {
+		t.Error("Unexpected storable string:" + storable)
+	}
+}
+
 func TestLoadInvalidSize(t *testing.T) {
 	storable := "4\nTask1\nTask2\nTask3"
 	taskList := InitTaskList()

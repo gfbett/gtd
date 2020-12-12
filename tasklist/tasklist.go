@@ -45,8 +45,18 @@ func (list *TaskList) ToStorableString() string {
 	size := list.Size()
 	fmt.Fprint(&b, size)
 	for i := 0; i < size; i++ {
-		b.WriteString("\n")
-		fmt.Fprint(&b, list.tasks[i].ToStorableString())
+		task := list.tasks[i]
+		if !task.Completed() {
+			b.WriteString("\n")
+			fmt.Fprint(&b, list.tasks[i].ToStorableString())
+		}
+	}
+	for i := 0; i < size; i++ {
+		task := list.tasks[i]
+		if task.Completed() {
+			b.WriteString("\n")
+			fmt.Fprint(&b, list.tasks[i].ToStorableString())
+		}
 	}
 	return b.String()
 }
@@ -54,7 +64,7 @@ func (list *TaskList) ToStorableString() string {
 func (list *TaskList) LoadFromStorableString(data string) bool {
 	parts := strings.Split(data, "\n")
 	size, err := strconv.Atoi(parts[0])
-	if err != nil || len(parts) < size+1 {
+	if err != nil || size < 0 || len(parts) < size+1 {
 		log.Print("Invalid task count")
 		return false
 	}

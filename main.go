@@ -9,7 +9,7 @@ import (
 )
 
 var inbox = flag.String("i", "", "Adds a task in the inbox")
-var removeTask = flag.Int("r", -1, "Remove a task given this index")
+var completeTask = flag.Int("c", -1, "Complete a task given this index")
 var editTask = flag.Int("e", -1, "Edit a task given this index")
 
 func main() {
@@ -18,19 +18,15 @@ func main() {
 	flag.Parse()
 
 	gtd := LoadGTD()
-	if gtd == nil {
-		fmt.Println("Unable to read stored tasks")
-		os.Exit(1)
-	}
 	modified := false
 
 	if *inbox != "" {
 		fmt.Println("Adding task", *inbox)
 		gtd.inbox.AddTask(tasklist.NewTask(*inbox))
 		modified = true
-	} else if *removeTask != -1 {
-		taskIndex := *removeTask
-		modified = RemoveTask(gtd.inbox, taskIndex)
+	} else if *completeTask != -1 {
+		taskIndex := *completeTask
+		modified = CompleteTask(gtd.inbox, taskIndex)
 	} else if *editTask != -1 {
 		taskIndex := *editTask
 		modified = EditTask(gtd.inbox, taskIndex)
@@ -43,11 +39,11 @@ func main() {
 
 }
 
-func RemoveTask(tasklist *tasklist.TaskList, index int) bool {
+func CompleteTask(tasklist *tasklist.TaskList, index int) bool {
 	task := tasklist.GetTask(index)
 	if task != nil {
-		fmt.Println("Removing task:" + task.Name())
-		tasklist.RemoveTask(index)
+		fmt.Println("Complete task:" + task.Name())
+		task.SetCompleted(true)
 		return true
 	}
 	return false
@@ -70,6 +66,10 @@ func EditTask(tasklist *tasklist.TaskList, index int) bool {
 func ListTasks(list *tasklist.TaskList) {
 	fmt.Println("Current tasks:")
 	for i := 0; i < list.Size(); i++ {
-		fmt.Println(fmt.Sprintf("%3d - %s", i, list.GetTask(i).Name()))
+		task := list.GetTask(i)
+		if !task.Completed() {
+			fmt.Println(fmt.Sprintf("%3d - %s", i, task.Name()))
+		}
+
 	}
 }
