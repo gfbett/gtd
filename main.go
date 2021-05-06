@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var inbox = flag.String("i", "", "Adds a task in the inbox")
+var inbox = flag.Bool("i", false, "Adds a task in the inbox")
 var completeTask = flag.Int("c", -1, "Complete a task given this index")
 var editTask = flag.Int("e", -1, "Edit a task given this index")
 
@@ -20,10 +20,8 @@ func main() {
 	gtd := LoadGTD()
 	modified := false
 
-	if *inbox != "" {
-		fmt.Println("Adding task", *inbox)
-		gtd.inbox.AddTask(tasklist.NewTask(*inbox))
-		modified = true
+	if *inbox != false {
+		modified = AddTask(gtd.inbox)
 	} else if *completeTask != -1 {
 		taskIndex := *completeTask
 		modified = CompleteTask(gtd.inbox, taskIndex)
@@ -37,6 +35,19 @@ func main() {
 		gtd.Store()
 	}
 
+}
+
+func AddTask(inbox *tasklist.TaskList) bool {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Enter new task description: ")
+	name, _ := reader.ReadString('\n')
+	if len(name) > 0 {
+		inbox.AddTask(tasklist.NewTask(name))
+		fmt.Println("New Task:", name)
+		return true
+	} else {
+		return false
+	}
 }
 
 func CompleteTask(tasklist *tasklist.TaskList, index int) bool {
