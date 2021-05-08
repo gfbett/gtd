@@ -76,3 +76,22 @@ func TestStore(t *testing.T) {
 		t.Error(fmt.Sprintf("Storable string not in expected format: \nExpected: %s \nReceived: %s", expected, storable))
 	}
 }
+
+func TestComplete(t *testing.T) {
+	task := NewTask("test task")
+	before := time.Now()
+	task.SetCompleted(true)
+	after := time.Now()
+	if !(task.CompletedDate().After(before) && task.CompletedDate().Before(after)) {
+		t.Error("Completed date is not set")
+	}
+}
+
+func TestNotComplete(t *testing.T) {
+	task := NewTask("test task")
+	task.SetCompleted(true)
+	task.SetCompleted(false)
+	if !task.CompletedDate().IsZero() {
+		t.Error("Completed date not reset")
+	}
+}

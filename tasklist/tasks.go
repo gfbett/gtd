@@ -79,6 +79,12 @@ func (task *Task) CompletedDate() time.Time {
 
 func (task *Task) SetCompleted(completed bool) {
 	task.completed = completed
+	if completed {
+		task.completedDate = time.Now()
+	} else {
+		var zeroTime time.Time
+		task.completedDate = zeroTime
+	}
 }
 
 func (task *Task) Name() string {
