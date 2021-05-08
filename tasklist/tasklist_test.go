@@ -145,7 +145,11 @@ func TestLoadInvalidData(t *testing.T) {
 }
 
 func TestTaskListLoadFromStorableString(t *testing.T) {
-	storable := "4\nTask1|false\nTask2|true\nTask3|false\nTask4|true"
+	storable := "4\nTask1|false|0001-01-01T00:00:00Z|0001-01-01T00:00:00Z\n"
+	storable += "Task2|true|0001-01-01T00:00:00Z|0001-01-01T00:00:00Z\n"
+	storable += "Task3|false|0001-01-01T00:00:00Z|0001-01-01T00:00:00Z\n"
+	storable += "Task4|true|0001-01-01T00:00:00Z|0001-01-01T00:00:00Z\n"
+
 	taskList := InitTaskList()
 	taskList.LoadFromStorableString(storable)
 	size := taskList.Size()
