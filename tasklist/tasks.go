@@ -26,7 +26,7 @@ func NewTask(name string) *Task {
 func LoadTask(storedString string) *Task {
 	task := new(Task)
 	parts := strings.Split(storedString, "|")
-	if len(parts) <= 2 {
+	if len(parts) < 2 {
 		log.Print("Not enough parts for loading task")
 		return nil
 	}
@@ -48,7 +48,7 @@ func LoadTask(storedString string) *Task {
 	}
 	if len(parts) >= 4 {
 		var date time.Time
-		err = task.completedDate.UnmarshalText([]byte(parts[3]))
+		err = date.UnmarshalText([]byte(parts[3]))
 		if err != nil {
 			log.Print("Cannot convert completed date")
 			return nil
@@ -71,6 +71,10 @@ func (task *Task) Completed() bool {
 
 func (task *Task) CreatedDate() time.Time {
 	return task.createdDate
+}
+
+func (task *Task) CompletedDate() time.Time {
+	return task.completedDate
 }
 
 func (task *Task) SetCompleted(completed bool) {

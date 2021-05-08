@@ -26,8 +26,9 @@ func TestNewTask(t *testing.T) {
 }
 
 func TestLoadTask(t *testing.T) {
-	stored := "Test task|true|2021-01-01T01:01:01Z|0001-01-01T00:00:00Z"
+	stored := "Test task|true|2021-01-01T01:01:01Z|2022-01-01T01:01:01Z"
 	createdDate := time.Date(2021, 01, 01, 01, 01, 01, 0, time.UTC)
+	completedDate := time.Date(2022, 01, 01, 01, 01, 01, 0, time.UTC)
 	task := LoadTask(stored)
 	if task == nil {
 		t.Error("Task shouldn't be nil")
@@ -40,6 +41,29 @@ func TestLoadTask(t *testing.T) {
 	}
 	if task.CreatedDate() != createdDate {
 		t.Error("Task created date not the expected")
+	}
+	if task.CompletedDate() != completedDate {
+		t.Error("Task completed date not the expected")
+	}
+}
+
+func TestLoadTaskOld(t *testing.T) {
+	stored := "Test task|true"
+	task := LoadTask(stored)
+	if task == nil {
+		t.Error("Task shouldn't be nil")
+	}
+	if task.Name() != "Test task" {
+		t.Error("Task doesn't have expected name")
+	}
+	if task.Completed() != true {
+		t.Error("Task completed not false")
+	}
+	if !task.CreatedDate().IsZero() {
+		t.Error("Task created date not the expected")
+	}
+	if !task.CompletedDate().IsZero() {
+		t.Error("Task completed date not the expected")
 	}
 }
 
