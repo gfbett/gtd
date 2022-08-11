@@ -39,6 +39,18 @@ func Store(writable Writable, path string) bool {
 	return true
 }
 
+func FileExists(writable Writable, path string) (bool, error) {
+	filename := writable.FileName()
+	_, err := os.Stat(path + "/" + filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
 func Load(writable Writable, path string) bool {
 	filename := writable.FileName()
 	file, err := os.Open(path + "/" + filename)

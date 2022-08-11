@@ -19,11 +19,18 @@ func LoadGTD() *GTD {
 	home, _ := os.UserHomeDir()
 	gtd.storageFolder = home + storageSubfolder
 	gtd.inbox = tasklist.InitTaskList()
-	res := persistence.Load(gtd.inbox, gtd.storageFolder)
-	if res != true {
+	exists, err := persistence.FileExists(gtd.inbox, gtd.storageFolder)
+	if err != nil {
 		log.Fatal("Unable to load inbox")
 		return nil
 	}
+	if exists {
+		res := persistence.Load(gtd.inbox, gtd.storageFolder)
+		if res != true {
+			log.Fatal("Unable to load inbox")
+			return nil
+		}
+	} 
 	return gtd
 }
 
